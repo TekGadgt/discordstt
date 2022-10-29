@@ -63,11 +63,11 @@ module.exports = {
           })
           .then((response) => {
             interaction.channel.send(
-              `${
-                interaction.user.nickname
-                  ? interaction.user.nickname
+              `**${
+                interaction.member.nickname
+                  ? interaction.member.nickname
                   : interaction.user.tag
-              }: ${response.results.channels[0].alternatives[0].transcript}`
+              }:** ${response.results.channels[0].alternatives[0].transcript}`
             );
           });
         //TODO: Add Deepgram Transcription and file deletion
