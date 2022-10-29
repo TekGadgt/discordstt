@@ -8,13 +8,19 @@ const { Writable, Transform } = require("stream");
 const { FileWriter } = require("wav");
 const { OpusEncoder } = require("@discordjs/opus");
 const { v4 } = require("uuid");
+const joinlogic = require("../lib/joinlogic");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("transcribe")
     .setDescription("Transcribes spoken words to messages in text chat."),
   async execute(interaction) {
-    //TODO: Add logic to join channel if not already joined
+    await joinlogic(interaction);
+
+    const deepgram = new Deepgram(deepgramKey);
+    const encoder = new OpusEncoder(16000, 1);
+    const connection = getVoiceConnection(interaction.guildId);
+
     class OpusDecodingStream extends Transform {
       encoder;
 
@@ -35,7 +41,7 @@ module.exports = {
         .subscribe(interaction.user.id, {
           end: {
             behavior: EndBehaviorType.AfterSilence,
-            duration: 3000,
+            duration: 2000,
           },
         })
         .pipe(new OpusDecodingStream({}, encoder))
@@ -46,15 +52,25 @@ module.exports = {
           })
         );
       audioStream.on("end", () => {
+        let audioSource = {
+          stream: fs.createReadStream(filePath),
+          mimetype: "audio/wav",
+        };
+        deepgram.transcription.preRecorded(audioSource).then((response) => {
+          interaction.channel.send(
+            `${
+              interaction.user.nickname
+                ? interaction.user.nickname
+                : interaction.user.tag
+            }: ${response.results.channels[0].alternatives[0].transcript}`
+          );
+        });
         //TODO: Add Deepgram Transcription and file deletion
         connection.receiver.subscriptions.delete(userId);
-        newSubscription(connection, filePath, userId);
+        newSubscription(connection, userId);
       });
     }
 
-    const deepgram = new Deepgram(deepgramKey);
-    const encoder = new OpusEncoder(16000, 1);
-    const connection = getVoiceConnection(interaction.guildId);
     newSubscription(connection, interaction.user.id);
   },
 };
