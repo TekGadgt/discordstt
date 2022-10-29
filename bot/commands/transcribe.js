@@ -56,15 +56,20 @@ module.exports = {
           stream: fs.createReadStream(filePath),
           mimetype: "audio/wav",
         };
-        deepgram.transcription.preRecorded(audioSource).then((response) => {
-          interaction.channel.send(
-            `${
-              interaction.user.nickname
-                ? interaction.user.nickname
-                : interaction.user.tag
-            }: ${response.results.channels[0].alternatives[0].transcript}`
-          );
-        });
+        deepgram.transcription
+          .preRecorded(audioSource, {
+            punctuate: true,
+            tier: "enhanced",
+          })
+          .then((response) => {
+            interaction.channel.send(
+              `${
+                interaction.user.nickname
+                  ? interaction.user.nickname
+                  : interaction.user.tag
+              }: ${response.results.channels[0].alternatives[0].transcript}`
+            );
+          });
         //TODO: Add Deepgram Transcription and file deletion
         connection.receiver.subscriptions.delete(userId);
         newSubscription(connection, userId);
