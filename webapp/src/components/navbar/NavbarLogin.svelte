@@ -9,10 +9,6 @@
     
   }
 
-  a:visited {
-
-  }
-
   a:hover {
     color: #BBB;
   }

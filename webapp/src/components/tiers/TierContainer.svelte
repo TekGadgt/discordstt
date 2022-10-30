@@ -19,12 +19,6 @@
 </div>
 
 <style> 
-  h3 {
-    text-transform: uppercase;
-    font-weight: initial;
-    font-size: larger;
-  }
-
   hr {
     width: 80%;
   }
