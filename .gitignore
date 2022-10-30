@@ -1,3 +1,5 @@
 bot/config.json
 bot/node_modules/
 bot/recordings/
+webapp/node_modules/
+webapp/.env
