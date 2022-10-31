@@ -69,8 +69,11 @@ module.exports = {
                   : interaction.user.tag
               }:** ${response.results.channels[0].alternatives[0].transcript}`
             );
+          }).then(() => {
+            fs.rm(filePath, () => {
+              return;
+            });
           });
-        //TODO: Add Deepgram Transcription and file deletion
         connection.receiver.subscriptions.delete(userId);
         newSubscription(connection, userId);
       });
