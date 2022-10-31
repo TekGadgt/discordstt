@@ -1,3 +1,5 @@
 bot/config.json
 bot/node_modules/
 bot/recordings/
+spa/node_modules/
+spa/config.json
