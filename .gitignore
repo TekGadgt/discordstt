@@ -1,5 +1,5 @@
 bot/config.json
 bot/node_modules/
 bot/recordings/
-webapp/node_modules/
-webapp/.env
+spa/node_modules/
+spa/config.json
